@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucas Cryan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #141414;
+  --bg2: #1c1c1c;
+  --bg3: #232323;
+  --border: #2e2e2e;
+  --border-hover: #444;
+  --purple: #a07cf5;
+  --white: #f0f0f0;
+  --gray: #888;
+  --gray2: #555;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Instrument Sans', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 80px 24px 120px;
+}
+
+::selection { background: rgba(160,124,245,0.25); }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--gray2); }
+
+/* ---- TOP ---- */
+.top { margin-bottom: 72px; }
+.top h1 {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+.top .role { font-size: 0.9rem; color: var(--purple); font-weight: 500; margin-bottom: 16px; }
+.top .bio { font-size: 0.95rem; color: var(--gray); max-width: 500px; line-height: 1.75; margin-bottom: 24px; }
+.top-links { display: flex; gap: 6px; flex-wrap: wrap; }
+.top-link {
+  font-size: 0.8rem; color: var(--gray); text-decoration: none;
+  padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px;
+  transition: border-color 0.15s, color 0.15s; cursor: pointer;
+  background: none; font-family: var(--sans);
+}
+.top-link:hover { border-color: var(--border-hover); color: var(--white); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 56px 0; }
+
+.label {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gray2); margin-bottom: 28px;
+}
+
+/* ---- ABOUT ---- */
+.about-body { color: var(--gray); font-size: 0.95rem; line-height: 1.8; margin-bottom: 28px; }
+.skills-row-label { font-size: 0.78rem; color: var(--gray2); margin-bottom: 8px; }
+.skills-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.tag {
+  font-size: 0.78rem; color: var(--gray); background: var(--bg2);
+  border: 1px solid var(--border); padding: 3px 10px; border-radius: 4px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tag:hover { color: var(--white); border-color: var(--border-hover); }
+.stats-row { display: flex; gap: 32px; padding-top: 24px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+.stat-n { font-family: var(--serif); font-style: italic; font-size: 1.8rem; color: var(--white); line-height: 1; }
+.stat-l { font-size: 0.75rem; color: var(--gray2); margin-top: 3px; }
+
+/* ---- PROJECTS ---- */
+.filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
+.filter-btn {
+  font-size: 0.78rem; color: var(--gray); background: none;
+  border: 1px solid var(--border); padding: 4px 12px; border-radius: 5px;
+  cursor: pointer; font-family: var(--sans); transition: all 0.15s;
+}
+.filter-btn:hover { border-color: var(--border-hover); color: var(--white); }
+.filter-btn.active { border-color: var(--purple); color: var(--purple); }
+
+.projects-list { display: flex; flex-direction: column; gap: 2px; }
+
+.project-row {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  align-items: start;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1px solid transparent;
+}
+.project-row:hover { background: var(--bg2); border-color: var(--border); }
+.project-row.hidden { display: none; }
+
+.project-thumb {
+  width: 88px; height: 66px; border-radius: 6px; overflow: hidden;
+  flex-shrink: 0; background: var(--bg3); border: 1px solid var(--border);
+}
+.project-thumb img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.3s ease;
+}
+.project-row:hover .project-thumb img { transform: scale(1.05); }
+.project-thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; color: var(--gray2);
+}
+
+.project-name {
+  font-size: 0.95rem; font-weight: 600; color: var(--white); margin-bottom: 5px;
+  display: flex; align-items: center; gap: 8px;
+}
+.project-name .arrow { color: var(--gray2); font-size: 0.8rem; opacity: 0; transition: opacity 0.15s, transform 0.15s; }
+.project-row:hover .project-name .arrow { opacity: 1; transform: translateX(2px); }
+.project-desc-short { font-size: 0.85rem; color: var(--gray); line-height: 1.6; margin-bottom: 10px; }
+.project-tags-row { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.ptag { font-size: 0.72rem; padding: 2px 8px; border-radius: 3px; border: 1px solid; }
+.ptag-prog { color: #a07cf5; border-color: rgba(160,124,245,0.3); background: rgba(160,124,245,0.07); }
+.ptag-elec { color: #f0a050; border-color: rgba(240,160,80,0.3); background: rgba(240,160,80,0.07); }
+.ptag-mech { color: #68d391; border-color: rgba(104,211,145,0.3); background: rgba(104,211,145,0.07); }
+.ptag-robo { color: #f687b3; border-color: rgba(246,135,179,0.3); background: rgba(246,135,179,0.07); }
+.ptag-other { color: var(--gray); border-color: var(--border); }
+.project-year { font-size: 0.78rem; color: var(--gray2); padding-top: 2px; white-space: nowrap; }
+
+/* ---- SKILLS — tiers ---- */
+.skill-tiers { display: flex; flex-direction: column; }
+.skill-tier {
+  display: grid; grid-template-columns: 90px 1fr;
+  gap: 16px; padding: 18px 0;
+  border-top: 1px solid var(--border); align-items: start;
+}
+.skill-tier:last-child { border-bottom: 1px solid var(--border); }
+.tier-name { font-size: 0.82rem; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+.tier-desc { font-size: 0.74rem; color: var(--gray2); line-height: 1.4; }
+.tier-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.tier-chip { font-size: 0.8rem; padding: 4px 12px; border-radius: 5px; border: 1px solid; transition: filter 0.15s; }
+.tier-chip:hover { filter: brightness(1.2); }
+.chip-confident {
+  color: var(--purple); border-color: rgba(160,124,245,0.4); background: rgba(160,124,245,0.1);
+}
+.chip-proficient {
+  color: #c4b8e8; border-color: rgba(160,124,245,0.2); background: rgba(160,124,245,0.04);
+}
+.chip-familiar {
+  color: var(--gray); border-color: var(--border); background: transparent;
+}
+
+/* ---- TIMELINE ---- */
+.timeline { display: flex; flex-direction: column; }
+.titem { display: grid; grid-template-columns: 90px 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid var(--border); }
+.titem:last-child { border-bottom: 1px solid var(--border); }
+.tdate { font-size: 0.78rem; color: var(--gray2); padding-top: 2px; }
+.tright h4 { font-size: 0.92rem; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+.tright .tsub { font-size: 0.8rem; color: var(--purple); margin-bottom: 6px; }
+.tright p { font-size: 0.83rem; color: var(--gray); line-height: 1.65; }
+.tbadge {
+  display: inline-block; font-size: 0.72rem; color: #f0a050;
+  background: rgba(240,160,80,0.08); border: 1px solid rgba(240,160,80,0.25);
+  padding: 2px 8px; border-radius: 3px; margin-top: 8px;
+}
+
+/* ---- CONTACT ---- */
+.contact-intro { font-size: 0.88rem; color: var(--gray); margin-bottom: 20px; line-height: 1.7; }
+.contact-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.clink {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border: 1px solid var(--border); border-radius: 9px;
+  text-decoration: none; transition: border-color 0.18s, background 0.18s;
+  cursor: pointer; background: none; font-family: var(--sans); text-align: left;
+}
+.clink:hover { border-color: var(--purple); background: var(--bg2); }
+.clink-icon {
+  width: 34px; height: 34px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; background: rgba(160,124,245,0.08); border: 1px solid rgba(160,124,245,0.2);
+}
+.clink-icon svg { display: block; }
+.clink-text { display: flex; flex-direction: column; min-width: 0; }
+.clink-label { font-size: 0.67rem; color: var(--gray2); letter-spacing: 0.04em; text-transform: uppercase; }
+.clink-val { font-size: 0.83rem; color: var(--white); margin-top: 2px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 540px) { .contact-links { grid-template-columns: 1fr; } }
+
+/* ---- MODAL ---- */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px); z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border-hover);
+  border-radius: 12px; max-width: 620px; width: 100%;
+  max-height: 85vh; overflow-y: auto;
+  transform: translateY(12px);
+  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+.overlay.open .modal { transform: none; }
+
+.modal-img {
+  width: 100%; height: 240px; object-fit: cover; display: block;
+  border-radius: 10px 10px 0 0;
+}
+.modal-img-placeholder {
+  width: 100%; height: 180px; background: var(--bg3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4rem; color: var(--gray2); border-radius: 10px 10px 0 0;
+}
+.modal-imgs {
+  display: flex; gap: 6px; padding: 12px 20px 0; overflow-x: auto;
+}
+.modal-imgs img {
+  height: 80px; width: auto; border-radius: 5px; object-fit: cover;
+  cursor: pointer; border: 1px solid var(--border);
+  transition: border-color 0.15s; flex-shrink: 0;
+}
+.modal-imgs img:hover, .modal-imgs img.active-thumb { border-color: var(--purple); }
+
+.modal-header {
+  padding: 20px 20px 0;
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+  margin-bottom: 16px;
+}
+.modal-header h2 {
+  font-family: var(--serif); font-style: italic;
+  font-size: 1.35rem; font-weight: 400; color: var(--white);
+}
+.modal-close {
+  background: none; border: 1px solid var(--border); color: var(--gray);
+  width: 28px; height: 28px; border-radius: 5px; cursor: pointer;
+  font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: border-color 0.15s, color 0.15s;
+}
+.modal-close:hover { border-color: var(--border-hover); color: var(--white); }
+.modal-body { padding: 0 20px 20px; }
+.msect { margin-bottom: 16px; }
+.msect h4 {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--gray2); margin-bottom: 5px;
+}
+.msect p { font-size: 0.87rem; color: var(--gray); line-height: 1.7; }
+.mtools { display: flex; flex-wrap: wrap; gap: 5px; }
+.modal-footer { display: flex; gap: 8px; padding-top: 16px; border-top: 1px solid var(--border); }
+.mlink {
+  font-size: 0.8rem; color: var(--gray); text-decoration: none;
+  padding: 5px 12px; border: 1px solid var(--border); border-radius: 5px;
+  transition: all 0.15s; cursor: pointer; background: none; font-family: var(--sans);
+}
+.mlink:hover { color: var(--white); border-color: var(--border-hover); }
+
+/* ---- TOAST ---- */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--bg3); border: 1px solid var(--border-hover);
+  border-radius: 8px; padding: 10px 16px; font-size: 0.82rem; color: var(--white);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4); opacity: 0; transform: translateY(8px);
+  transition: all 0.25s; z-index: 200; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: none; }
+
+@media (max-width: 540px) {
+  body { padding: 48px 18px 80px; }
+  .top h1 { font-size: 2rem; }
+  .stats-row { gap: 20px; }
+  .titem, .skill-tier { grid-template-columns: 70px 1fr; }
+  .project-row { grid-template-columns: 72px 1fr auto; gap: 12px; }
+  .project-thumb { width: 72px; height: 54px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP -->
+<div class="top">
+  <h1>Lucas Cryan</h1>
+  <div class="role">Electrical Engineering · ASU Barrett, The Honors College · Class of 2030</div>
+  <p class="bio">I build things. Circuits, embedded systems, robots, simulations — whatever solves the problem. Based in Tempe, AZ. Open to internships and research opportunities.</p>
+  <div class="top-links">
+    <button class="top-link" onclick="copyEmail()">lgcryan01@gmail.com</button>
+    <button class="top-link" onclick="openLink('https://github.com/lucascryan')">GitHub ↗</button>
+    <button class="top-link" onclick="openLink('https://www.linkedin.com/in/lucas-cryan/')">LinkedIn ↗</button>
+    <button class="top-link" onclick="toast('Resume coming soon')">Resume ↓</button>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about">
+  <div class="label">About</div>
+  <p class="about-body">Freshman at ASU Barrett studying Electrical Engineering with a focus on embedded systems and signal processing. I got into EE because I wanted to understand what's actually happening inside electronics — then I wanted to design my own. I've spent the last few years competing in robotics, running engineering projects, and building things that actually work. I care about the full process: identifying a real problem, designing a solution, building it, and figuring out why it didn't work the first time.</p>
+
+  <div>
+    <div class="skills-row-label">Hardware & Tools</div>
+    <div class="skills-row">
+      <span class="tag">Oscilloscope</span><span class="tag">KiCad</span><span class="tag">LTspice</span><span class="tag">Multimeter</span><span class="tag">Soldering</span><span class="tag">Fusion 360</span>
+    </div>
+    <div class="skills-row-label">Programming</div>
+    <div class="skills-row">
+      <span class="tag">Python</span><span class="tag">C/C++</span><span class="tag">MATLAB</span><span class="tag">Arduino</span><span class="tag">Verilog</span>
+    </div>
+    <div class="skills-row-label">Platforms</div>
+    <div class="skills-row">
+      <span class="tag">Arduino</span><span class="tag">Raspberry Pi</span><span class="tag">STM32</span><span class="tag">ESP32</span>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div><div class="stat-n">10+</div><div class="stat-l">Projects</div></div>
+    <div><div class="stat-n">4.0</div><div class="stat-l">GPA</div></div>
+    <div><div class="stat-n">3</div><div class="stat-l">Awards</div></div>
+    <div><div class="stat-n">Barrett</div><div class="stat-l">Honors College</div></div>
+  </div>
+</div>
+
+<hr>
+
+<!-- PROJECTS -->
+<div id="projects">
+  <div class="label">Projects</div>
+  <div class="filter-row">
+    <button class="filter-btn active" data-f="all">All</button>
+    <button class="filter-btn" data-f="prog">Programming</button>
+    <button class="filter-btn" data-f="elec">Electronics</button>
+    <button class="filter-btn" data-f="mech">Mechanical</button>
+    <button class="filter-btn" data-f="robo">Robotics</button>
+  </div>
+
+  <div class="projects-list">
+
+    <div class="project-row" data-cat="robo elec" onclick="openModal('robot')">
+      <div class="project-thumb">
+        <!-- Replace with: <img src="images/robot.jpg" alt="Robot"> -->
+        <div class="project-thumb-placeholder">🤖</div>
+      </div>
+      <div>
+        <div class="project-name">Autonomous Line-Following Robot <span class="arrow">→</span></div>
+        <div class="project-desc-short">PID-controlled robot that navigates complex track layouts with 94% accuracy using IR sensors and custom motor drivers.</div>
+        <div class="project-tags-row">
+          <span class="ptag ptag-robo">Robotics</span>
+          <span class="ptag ptag-elec">Electronics</span>
+          <span class="ptag ptag-prog">C++</span>
+        </div>
+      </div>
+      <div class="project-year">2024</div>
+    </div>
+
+    <div class="project-row" data-cat="elec" onclick="openModal('pcb')">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">🔌</div>
+      </div>
+      <div>
+        <div class="project-name">Custom Motor Driver PCB <span class="arrow">→</span></div>
+        <div class="project-desc-short">Designed and fabricated a dual H-bridge motor driver in KiCad. Handles 5A continuous with overcurrent protection and PWM speed control.</div>
+        <div class="project-tags-row">
+          <span class="ptag ptag-elec">Electronics</span>
+          <span class="ptag ptag-other">PCB Design</span>
+          <span class="ptag ptag-other">KiCad</span>
+        </div>
+      </div>
+      <div class="project-year">2024</div>
+    </div>
+
+    <div class="project-row" data-cat="prog elec" onclick="openModal('weather')">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">🌦️</div>
+      </div>
+      <div>
+        <div class="project-name">Weather Station & Data Logger <span class="arrow">→</span></div>
+        <div class="project-desc-short">Raspberry Pi station with Python dashboard visualizing 30-day trends and sending automated alerts for extreme conditions.</div>
+        <div class="project-tags-row">
+          <span class="ptag ptag-prog">Python</span>
+          <span class="ptag ptag-elec">Raspberry Pi</span>
+          <span class="ptag ptag-other">Data</span>
+        </div>
+      </div>
+      <div class="project-year">2023</div>
+    </div>
+
+    <div class="project-row" data-cat="elec mech" onclick="openModal('solar')">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">☀️</div>
+      </div>
+      <div>
+        <div class="project-name">Dual-Axis Solar Tracker <span class="arrow">→</span></div>
+        <div class="project-desc-short">LDR-guided servo system that improved panel energy output by 23% over a fixed-panel baseline.</div>
+        <div class="project-tags-row">
+          <span class="ptag ptag-elec">Electronics</span>
+          <span class="ptag ptag-mech">Mechanical</span>
+          <span class="ptag ptag-other">Arduino</span>
+        </div>
+      </div>
+      <div class="project-year">2023</div>
+    </div>
+
+    <div class="project-row" data-cat="robo prog mech" onclick="openModal('arm')">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">🦾</div>
+      </div>
+      <div>
+        <div class="project-name">3-DOF Robotic Arm <span class="arrow">→</span></div>
+        <div class="project-desc-short">5-servo arm with a Python IK solver and GUI. Commanded by Cartesian coordinates, pick-and-places objects in its work envelope.</div>
+        <div class="project-tags-row">
+          <span class="ptag ptag-robo">Robotics</span>
+          <span class="ptag ptag-prog">Python</span>
+          <span class="ptag ptag-mech">CAD</span>
+        </div>
+      </div>
+      <div class="project-year">2025</div>
+    </div>
+
+    <div class="project-row" data-cat="prog mech" onclick="openModal('bridge')">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">🌉</div>
+      </div>
+      <div>
+        <div class="project-name">Truss Bridge FEA Simulator <span class="arrow">→</span></div>
+        <div class="project-desc-short">MATLAB tool that runs finite element analysis on truss designs and auto-optimizes cross-sections for minimum weight.</div>
+        <div class="project-tags-row">
+          <span class="ptag ptag-prog">MATLAB</span>
+          <span class="ptag ptag-mech">Structural</span>
+          <span class="ptag ptag-other">FEA</span>
+        </div>
+      </div>
+      <div class="project-year">2025</div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+
+<!-- SKILLS -->
+<div id="skills">
+  <div class="label">Skills</div>
+  <div class="skill-tiers">
+
+    <div class="skill-tier">
+      <div>
+        <div class="tier-name">Confident</div>
+        <div class="tier-desc">Use regularly, comfortable solving problems</div>
+      </div>
+      <div class="tier-chips">
+        <span class="tier-chip chip-confident">Python</span>
+        <span class="tier-chip chip-confident">C/C++</span>
+        <span class="tier-chip chip-confident">Arduino</span>
+        <span class="tier-chip chip-confident">3D Printing</span>
+        <span class="tier-chip chip-confident">Soldering</span>
+        <span class="tier-chip chip-confident">Multimeter</span>
+      </div>
+    </div>
+
+    <div class="skill-tier">
+      <div>
+        <div class="tier-name">Proficient</div>
+        <div class="tier-desc">Solid foundation, still building depth</div>
+      </div>
+      <div class="tier-chips">
+        <span class="tier-chip chip-proficient">KiCad</span>
+        <span class="tier-chip chip-proficient">Fusion 360</span>
+        <span class="tier-chip chip-proficient">MATLAB</span>
+        <span class="tier-chip chip-proficient">Raspberry Pi</span>
+        <span class="tier-chip chip-proficient">LTspice</span>
+        <span class="tier-chip chip-proficient">Oscilloscope</span>
+        <span class="tier-chip chip-proficient">ESP32</span>
+      </div>
+    </div>
+
+    <div class="skill-tier">
+      <div>
+        <div class="tier-name">Familiar</div>
+        <div class="tier-desc">Exposure through coursework or projects</div>
+      </div>
+      <div class="tier-chips">
+        <span class="tier-chip chip-familiar">Verilog</span>
+        <span class="tier-chip chip-familiar">STM32</span>
+        <span class="tier-chip chip-familiar">ROS</span>
+        <span class="tier-chip chip-familiar">Signal Processing</span>
+        <span class="tier-chip chip-familiar">Linux</span>
+        <span class="tier-chip chip-familiar">Git</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+
+<!-- ACHIEVEMENTS -->
+<div id="achievements">
+  <div class="label">Experience & Achievements</div>
+  <div class="timeline">
+
+    <div class="titem">
+      <div class="tdate">2024–now</div>
+      <div class="tright">
+        <h4>Arizona State University — Barrett, The Honors College</h4>
+        <div class="tsub">B.S. Electrical Engineering · Class of 2030 · 4.0 GPA</div>
+        <p>Electrical Engineering with coursework in circuit analysis, embedded systems, and digital logic. Barrett Honors distinction.</p>
+      </div>
+    </div>
+
+    <div class="titem">
+      <div class="tdate">2024</div>
+      <div class="tright">
+        <h4>FIRST Tech Challenge — Team Captain</h4>
+        <div class="tsub">FTC Team #14823</div>
+        <p>Led 8-person team through CENTERSTAGE season. Lead programmer and electrical designer. Regional qualifier.</p>
+        <div class="tbadge">🏆 Control Award — Regional</div>
+      </div>
+    </div>
+
+    <div class="titem">
+      <div class="tdate">2024</div>
+      <div class="tright">
+        <h4>Science Olympiad — Regional</h4>
+        <div class="tsub">State Qualifier</div>
+        <p>Competed in Detector Building and Circuit Lab. Team placed 2nd in Detector Building, qualified for state.</p>
+        <div class="tbadge">🥈 2nd Place — Detector Building</div>
+      </div>
+    </div>
+
+    <div class="titem">
+      <div class="tdate">Summer '24</div>
+      <div class="tright">
+        <h4>MIT Beaver Works Summer Institute</h4>
+        <div class="tsub">Autonomous Vehicles Track</div>
+        <p>Built and programmed a 1/10th scale autonomous car using ROS, computer vision, and LiDAR. One of 40 students selected nationally.</p>
+      </div>
+    </div>
+
+    <div class="titem">
+      <div class="tdate">2023</div>
+      <div class="tright">
+        <h4>TSA State Conference — Semifinalist</h4>
+        <div class="tsub">Technology Student Association</div>
+        <p>Top 10% in CAD Architecture. Submitted Circuit Design and Video Game Design entries.</p>
+      </div>
+    </div>
+
+    <div class="titem">
+      <div class="tdate">2022–24</div>
+      <div class="tright">
+        <h4>Engineering Club — Founder & President</h4>
+        <div class="tsub">Lincoln High School</div>
+        <p>Started the school's first engineering club. Grew to 35 members. Weekly build sessions, speaker events, mini Maker Fair.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact">
+  <div class="label">Contact</div>
+  <p class="contact-intro">Open to internships, research, and collaborations. Feel free to reach out.</p>
+  <div class="contact-links">
+
+    <button class="clink" onclick="copyEmail()">
+      <div class="clink-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a07cf5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2.5"/>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+      </div>
+      <div class="clink-text">
+        <div class="clink-label">Email</div>
+        <div class="clink-val">lgcryan01@gmail.com</div>
+      </div>
+    </button>
+
+    <button class="clink" onclick="openLink('https://www.linkedin.com/in/lucas-cryan/')">
+      <div class="clink-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#a07cf5">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <rect x="2" y="9" width="4" height="12"/>
+          <circle cx="4" cy="4" r="2"/>
+        </svg>
+      </div>
+      <div class="clink-text">
+        <div class="clink-label">LinkedIn</div>
+        <div class="clink-val">lucas-cryan</div>
+      </div>
+    </button>
+
+    <button class="clink" onclick="openLink('https://github.com/lucascryan')">
+      <div class="clink-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#a07cf5">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+      </div>
+      <div class="clink-text">
+        <div class="clink-label">GitHub</div>
+        <div class="clink-val">lucascryan</div>
+      </div>
+    </button>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="maybeClose(event)">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<script>
+/* ---- PROJECT DATA ----
+   To add images: images: ['images/myproject1.jpg', 'images/myproject2.jpg']
+   Leave as [] for emoji placeholder fallback.
+*/
+const data = {
+  robot: {
+    title: 'Autonomous Line-Following Robot',
+    emoji: '🤖',
+    images: [],
+    tags: [['Robotics','robo'],['Electronics','elec'],['C++','prog'],['PID Control','other']],
+    problem: 'Our robotics team needed a reliable autonomous navigation platform for track-based challenges. Existing solutions were expensive or underperformed on curved tracks.',
+    design: 'Differential drive robot with 8 IR sensors in an array. PID controller tuned with the Ziegler-Nichols method. Custom sensor PCB designed in KiCad.',
+    build: 'Laser-cut acrylic and aluminum extrusion chassis. Soldered sensor board. Flashed C++ firmware to Arduino Mega. Three weeks of PID gain tuning.',
+    challenges: 'IR sensors sensitive to ambient light and surface color. Fixed with adaptive thresholding and a physical light shield around the sensor array.',
+    results: '94% accuracy on test tracks. 2nd place at regional. Completes a 4-meter track in under 8 seconds.',
+    learned: 'Feedback control systems, PCB layout, the importance of mechanical tolerances in sensor placement.',
+    tools: ['Arduino Mega','C++','KiCad','Fusion 360','Laser Cutter'],
+    github: 'https://github.com/lucascryan'
+  },
+  pcb: {
+    title: 'Custom Motor Driver PCB',
+    emoji: '🔌',
+    images: [],
+    tags: [['Electronics','elec'],['PCB Design','other'],['KiCad','other']],
+    problem: 'Off-the-shelf motor driver modules were too bulky and unreliable at higher currents for our robotics platform.',
+    design: 'Dual H-bridge topology using DRV8833 ICs. Schematic and layout in KiCad. 2-layer board with proper ground plane and thermal relief on power pads.',
+    build: 'Ordered boards from JLCPCB. Hand-soldered SMD components. Tested with bench supply and oscilloscope before connecting to motors.',
+    challenges: 'First revision had a via-in-pad error that caused delamination during reflow. Second revision fixed layout and added test points for easier debugging.',
+    results: 'Handles 5A continuous per channel. PWM control up to 20kHz. 40×30mm footprint. Running reliably for 6+ months.',
+    learned: 'PCB layout best practices, thermal management, DFM (design for manufacture), SMD soldering technique.',
+    tools: ['KiCad','LTspice','Oscilloscope','Soldering Iron','DRV8833'],
+    github: 'https://github.com/lucascryan'
+  },
+  weather: {
+    title: 'Weather Station & Data Logger',
+    emoji: '🌦️',
+    images: [],
+    tags: [['Python','prog'],['Raspberry Pi','elec'],['Data','other']],
+    problem: 'Local weather data lacked granularity. I wanted hyper-local monitoring with historical trending and automated alerts.',
+    design: 'Raspberry Pi Zero W compute module. Sensors: BME280 (temp/pressure/humidity), rain gauge, anemometer. SQLite local storage.',
+    build: 'Weatherproof PVC/3D-printed housing. Python data collection daemon. Real-time Flask web dashboard with Chart.js.',
+    challenges: 'Sensor readings drifted in summer heat. Built a solar radiation shield and cross-validated against a nearby NOAA station.',
+    results: '30-day uptime >99%. Dashboard accessible on local network. Automated alerts on frost, high wind, and heavy rain.',
+    learned: 'Full-stack data pipeline, Linux sysadmin, sensor calibration, time-series database design.',
+    tools: ['Python','Raspberry Pi','SQLite','Flask','Chart.js','BME280'],
+    github: 'https://github.com/lucascryan'
+  },
+  solar: {
+    title: 'Dual-Axis Solar Tracker',
+    emoji: '☀️',
+    images: [],
+    tags: [['Electronics','elec'],['Arduino','elec'],['Mechanical','mech']],
+    problem: 'Fixed solar panels lose up to 40% efficiency over a day. Build an accessible dual-axis tracker to maximize harvest.',
+    design: 'Dual LDR arrangement detects sun position differential. Two servos adjust azimuth and elevation. Dead-band controller minimizes motor hunting.',
+    build: 'Machined aluminum mounting plate. Added INA219 current sensor to measure output vs. fixed baseline.',
+    challenges: 'Wind caused oscillation. Added a PID derivative term and mechanical dampening to reduce hunting.',
+    results: '23% improvement in daily energy output. Correct tracking across full day arc. Total cost under $45.',
+    learned: 'Control system tuning, power electronics measurement, designing for outdoor environments.',
+    tools: ['Arduino Uno','C++','Servo Motors','LDR Sensors','INA219'],
+    github: 'https://github.com/lucascryan'
+  },
+  arm: {
+    title: '3-DOF Robotic Arm',
+    emoji: '🦾',
+    images: [],
+    tags: [['Robotics','robo'],['Python','prog'],['CAD','mech']],
+    problem: 'Learn robotic kinematics hands-on by building an arm commanded by Cartesian coordinates instead of raw joint angles.',
+    design: 'Modeled 3-link planar arm in Fusion 360. Derived IK equations analytically. Python GUI with real-time control and workspace visualization.',
+    build: 'PLA structural links. MG996R servos for main joints. PCA9685 PWM driver from Raspberry Pi over I2C.',
+    challenges: 'Servo backlash caused ~5mm positional error. Implemented direction-aware backlash compensation in the IK solver.',
+    results: '35cm reach in any direction within work envelope. IK solver runs in <1ms. Demoed at school Maker Fair.',
+    learned: 'Forward and inverse kinematics, I2C protocol, Tkinter GUI, practical limits of hobby servo actuation.',
+    tools: ['Python','Raspberry Pi','Fusion 360','PCA9685','MG996R'],
+    github: 'https://github.com/lucascryan'
+  },
+  bridge: {
+    title: 'Truss Bridge FEA Simulator',
+    emoji: '🌉',
+    images: [],
+    tags: [['MATLAB','prog'],['Structural','mech'],['FEA','other']],
+    problem: 'Needed to test hundreds of truss configurations quickly for TSA without physically building each one.',
+    design: 'Stiffness matrix method for 2D truss analysis in MATLAB. Genetic algorithm layer for auto-optimizing member cross-sections.',
+    build: 'Core FEA engine in MATLAB with App Designer UI. Color-coded stress visualization and interactive node placement.',
+    challenges: 'Certain topologies caused singular matrices. Added constraint detection and automatic topology validation.',
+    results: 'Analyzed 500+ configurations in minutes. Resulting balsa bridge held 18 kg — 40% stronger than my previous intuition-based design.',
+    learned: 'Matrix structural analysis, numerical methods, genetic algorithms, translating theory into working tools.',
+    tools: ['MATLAB','App Designer','FEA','Genetic Algorithm'],
+    github: 'https://github.com/lucascryan'
+  }
+};
+
+let currentImages = [];
+
+function openModal(key) {
+  const p = data[key];
+  currentImages = p.images || [];
+  const tagsHTML = p.tags.map(([l,t]) => `<span class="ptag ptag-${t}">${l}</span>`).join('');
+  const toolsHTML = p.tools.map(t => `<span class="tag">${t}</span>`).join('');
+
+  let imgHTML = '';
+  if (currentImages.length > 0) {
+    imgHTML = `<img class="modal-img" id="modal-main-img" src="${currentImages[0]}" alt="${p.title}">`;
+    if (currentImages.length > 1) {
+      const thumbs = currentImages.map((src, i) =>
+        `<img src="${src}" class="${i === 0 ? 'active-thumb' : ''}" onclick="switchImg(${i})" alt="Image ${i+1}">`
+      ).join('');
+      imgHTML += `<div class="modal-imgs">${thumbs}</div>`;
+    }
+  } else {
+    imgHTML = `<div class="modal-img-placeholder">${p.emoji}</div>`;
+  }
+
+  document.getElementById('modal').innerHTML = `
+    ${imgHTML}
+    <div class="modal-header">
+      <div>
+        <div class="project-tags-row" style="margin-bottom:8px">${tagsHTML}</div>
+        <h2>${p.title}</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="msect"><h4>Problem</h4><p>${p.problem}</p></div>
+      <div class="msect"><h4>Design</h4><p>${p.design}</p></div>
+      <div class="msect"><h4>Build</h4><p>${p.build}</p></div>
+      <div class="msect"><h4>Challenges</h4><p>${p.challenges}</p></div>
+      <div class="msect"><h4>Results</h4><p>${p.results}</p></div>
+      <div class="msect"><h4>What I Learned</h4><p>${p.learned}</p></div>
+      <div class="msect"><h4>Tools</h4><div class="mtools">${toolsHTML}</div></div>
+      <div class="modal-footer">
+        <button class="mlink" onclick="openLink('${p.github}')">GitHub ↗</button>
+        <button class="mlink" onclick="toast('Video coming soon')">Video →</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function switchImg(i) {
+  const main = document.getElementById('modal-main-img');
+  if (main) main.src = currentImages[i];
+  document.querySelectorAll('.modal-imgs img').forEach((el, idx) => {
+    el.classList.toggle('active-thumb', idx === i);
+  });
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function maybeClose(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Filter
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.project-row').forEach(row => {
+      row.classList.toggle('hidden', f !== 'all' && !row.dataset.cat.includes(f));
+    });
+  });
+});
+
+// Copy email
+function copyEmail() {
+  const email = 'lgcryan01@gmail.com';
+  navigator.clipboard.writeText(email).then(() => {
+    toast('Email copied to clipboard');
+  }).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = email;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    toast('Email copied to clipboard');
+  });
+}
+
+function openLink(url) {
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// Toast
+let tt;
+function toast(msg) {
+  const el = document.getElementById('toast-el');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(() => el.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html>
